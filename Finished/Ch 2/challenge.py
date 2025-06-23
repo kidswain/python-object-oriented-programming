@@ -33,7 +33,7 @@ class Bond(Asset):
 
 # ~~~~~~~~~ TEST CODE ~~~~~~~~~
 try:
-   ast = Asset(100.0)
+   ast = Asset(100.0) # type: ignore
 except:
    print("Can't instantiate Asset!")
 

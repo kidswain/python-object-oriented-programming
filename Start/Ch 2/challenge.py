@@ -12,19 +12,35 @@
 # For stocks: "Ticker: Company -- $Price"
 # For bonds: "description: duration'yr' : $price : yieldamt%"
 
-class Asset():
-    pass
+from abc import ABC, abstractmethod
 
-class Stock():
-    pass
+class Asset(ABC):
+    def __init__(self, price: float):
+        self.price = price
+    @abstractmethod
+    def get_description(self) -> str:
+        pass
 
-class Bond():
-    pass
+class Stock(Asset):
+    def __init__(self, ticker: str, price: float, company: str):
+        super().__init__(price)
+        self.ticker = ticker
+        self.company = company
+    def get_description(self) -> str:
+        return f"{self.ticker}: {self.company} -- ${self.price:.1f}"
 
+class Bond(Asset):
+    def __init__(self, price: float, description: str, duration: int, interest: float):
+        super().__init__(price)
+        self.description = description
+        self.duration = duration
+        self.interest = interest
+    def get_description(self) -> str:
+        return f"{self.description}: {self.duration} : ${self.price:.1f} : {self.interest:.2f}%"
 
 # ~~~~~~~~~ TEST CODE ~~~~~~~~~
 try:
-   ast = Asset(100.0)
+   ast = Asset(100.0) # type: ignore
 except:
    print("Can't instantiate Asset!")
 
