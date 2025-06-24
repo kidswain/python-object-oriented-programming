@@ -7,7 +7,6 @@
 
 from abc import ABC, abstractmethod
 
-
 class Asset(ABC):
     def __init__(self, price):
         self.price = price
@@ -16,13 +15,17 @@ class Asset(ABC):
     def __str__(self):
         pass
 
-
 class Stock(Asset):
     def __init__(self, ticker, price, company):
         super().__init__(price)
         self.company = company
         self.ticker = ticker
 
+    def __lt__(self, other):
+        return self.price < other.price
+
+    def __str__(self):
+        return f"{self.ticker} ({self.company}): ${self.price:.2f}"
 
 class Bond(Asset):
     def __init__(self, price, description, duration, yieldamt):
@@ -30,6 +33,12 @@ class Bond(Asset):
         self.description = description
         self.duration = duration
         self.yieldamt = yieldamt
+
+    def __lt__(self, other):
+        return self.yieldamt < other.yieldamt
+
+    def __str__(self):
+        return f"{self.description} - {self.duration}y @ {self.yieldamt:.2f}%"
 
 
 # ~~~~~~~~~ TEST CODE ~~~~~~~~~
@@ -55,3 +64,4 @@ for stock in stocks:
 print("-----------")
 for bond in bonds:
     print(bond)
+
