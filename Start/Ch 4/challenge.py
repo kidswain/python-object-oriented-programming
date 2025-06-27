@@ -5,23 +5,51 @@
 # The subclasses are required to override the magic method
 # that makes them sortable
 
-class Asset():
-    pass
-    
+from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
+from functools import total_ordering
 
+@total_ordering
+@dataclass
+class Asset(ABC):
+    value: float
+
+    @abstractmethod
+    def __lt__(self, other): pass
+
+@dataclass
 class Stock(Asset):
-    pass
+    symbol: str
+    company: str
 
+    def __lt__(self, other):
+        if not isinstance(other, Stock):
+            return NotImplemented
+        return self.symbol < other.symbol
 
+    def __str__(self):
+        return f"{self.symbol}: {self.value} ({self.company})"
+
+@dataclass
 class Bond(Asset):
-    pass
+    name: str
+    maturity: int
+    rate: float
+
+    def __lt__(self, other):
+        if not isinstance(other, Bond):
+            return NotImplemented
+        return self.maturity < other.maturity
+
+    def __str__(self):
+        return f"{self.name}: {self.value}, {self.maturity}Y @ {self.rate}%"
 
 # ~~~~~~~~~ TEST CODE ~~~~~~~~~
 stocks = [
-    Stock("MSFT", 342.0, "Microsoft Corp"),
-    Stock("GOOG", 135.0, "Google Inc"),
-    Stock("META", 275.0, "Meta Platforms Inc"),
-    Stock("AMZN", 120.0, "Amazon Inc")
+    Stock(342.0, "MSFT", "Microsoft Corp"),
+    Stock(135.0, "GOOG", "Google Inc"),
+    Stock(275.0, "META", "Meta Platforms Inc"),
+    Stock(120.0, "AMZN", "Amazon Inc")
 ]
 
 bonds = [
@@ -32,7 +60,7 @@ bonds = [
 ]
 
 try:
-   ast = Asset(100.0)
+   ast = Asset(100.0) # type: ignore
 except:
    print("Can't instantiate Asset!")
 
